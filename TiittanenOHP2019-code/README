@@ -1,0 +1,39 @@
+## -----------------------------------------------------------------------------
+# This directory contains code and data related to paper
+#
+# "Estimating Regression Errors with Unknown Ground Truth"
+#  
+#  by
+#
+# Henri Tiittanen, Emilia Oikarinen, Andreas Henelius, and Kai Puolamäki
+# 
+#
+# Follow the steps below to run the experiments.
+# It can take a couple of hours to run all experiments and process results.
+# Scalability results are included. Performance results take 22GB and are thus
+# not included. 
+#
+# Experiments are designed to be run using the Slurm Workload Manager.
+#
+#
+## -----------------------------------------------------------------------------
+#
+#  Step 1) retrieve data: 
+        cd data
+	Rscript --vanilla retrieve_data.R
+#
+#  Step 2) run the experiments to get the results:
+        cd ../experiments
+        sbatch batch_train_models.sh
+        # wait until the above finishes then
+        sbatch batch_scalability.sh
+        sbatch batch_test_drifters.sh
+
+#  Step 3) process the results:
+         bash process_results.sh
+
+## -----------------------------------------------------------------------------
+# Now:
+#   - Table II contents will be in folder "experiments/results/tables" 
+#   - All figures will be in the folder "experiments/figures"
+## -----------------------------------------------------------------------------
