@@ -65,11 +65,11 @@ par(mai=c(0,0,0,0))
 
 pdf(output_file2)
 par(mar=c(5,5.5,4,1)+.1)
-plot(c(0,1),c(0,1),type="n",xlab = "false positive rate", ylab = "true positive rate", main = "", cex.axis = 1.5, cex.lab = 2)
+plot(c(0,1),c(0,1),type="n",xlab = "false positive rate", ylab = "true positive rate", main = "", cex.axis = 2.5, cex.lab = 3)
 ##mtext("false positive rate",side=1,cex=2)
 ##mtext("true positive rate",side=2,cex=2)
 
-lines(c(0,1),c(0,1),lty="dashed")
+lines(c(0,1),c(0,1),lty="dashed", lwd=3)
 
 aux <- data.frame(error=out$error[test_index:length(out$error)]>error_thr,
                   index=out$z[test_index:length(out$error)],z=NA,tp=NA,fp=NA,fn=NA,fpr=NA,tpr=NA,f1=NA,c=NA)
@@ -93,8 +93,8 @@ aux[,"c"] <- (aux[,"z"]-mz)/sdz
 lines(aux[,c("fpr","tpr")],lwd=3)
 i <- which.max(aux[,"f1"])
 points(aux[i,c("fpr","tpr")],col=cols[3],pch=19,cex=3)
-text(aux[i,c("fpr","tpr")],sprintf("F1 = %.3f",aux[i,"f1"]),col=cols[3],adj=c(-0.1,1.2),cex=2)
-text(0.75,0.25,sprintf("AUC = %.3f",sum((aux[-dim(aux)[1],"fpr"]-aux[-1,"fpr"])*(aux[-1,"tpr"]+aux[-dim(aux)[1],"tpr"])/2)),cex=2)
+text(aux[i,c("fpr","tpr")],sprintf("F1 = %.3f",aux[i,"f1"]),col=cols[3],adj=c(-0.1,1.2),cex=3)
+text(0.75,0.25,sprintf("AUC = %.3f",sum((aux[-dim(aux)[1],"fpr"]-aux[-1,"fpr"])*(aux[-1,"tpr"]+aux[-dim(aux)[1],"tpr"])/2)),cex=3)
 if(isbike=="1") {
   ind_tr <- max(out$z)+delta
 } else {

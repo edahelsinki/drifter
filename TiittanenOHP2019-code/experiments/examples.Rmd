@@ -44,19 +44,32 @@ for(i in 1:dim(seg)[1]) {
 ```
 
 ```{r}
-col4 <- c('#e41a1c','#377eb8','#4daf4a','#984ea3')
+# col4 <- c('#e41a1c','#377eb8','#4daf4a','#984ea3') # not color-blind safe, 
+# changed to https://colorbrewer2.org/?type=diverging&scheme=PuOr&n=4
+col4 <- c('#e66101','#fdb863','#b2abd2','#5e3c99')
+
 lty4 <- rep("dashed",4)
 pch4 <- c(0,1,2,6)
 xrange <- range(data_tr[,2],data_te1[,2],data_te2[,2])
 xx <- seq(from=xrange[1]-0.05,to=xrange[2]+0.05,length.out=256)
-for(onlydata in c(FALSE,TRUE)) {
-pdf(if(onlydata) "figures/2dplotbare.pdf" else "figures/2dplot.pdf",width=7,height=7)
-plot(c(0,2.4),c(0.2,1.25),type="n",bty="n",xlab="x",ylab="y")
-rug(data_tr[,"x"],col="darkred")
-rug(data_te2[,"x"])
-lines(xx,f(xx),col="gray",lty="dotted",lwd=2)
 
-if(!onlydata) {
+for(onlydata in c(FALSE,TRUE)) {
+  pdf(if(onlydata) "figures/2dplotbare.pdf" else "figures/2dplot.pdf",width=9,height=7)
+  if(onlydata) {
+    plot(c(0,2.4),c(0.2,1.25),type="n",bty="n",xlab="x",ylab="y",cex.axis = 2, cex.lab = 2)
+    rug(data_tr[,"x"],col="darkred")
+    rug(data_te2[,"x"])
+    lines(xx,f(xx),col="gray",lty="dotted",lwd=3)
+    
+    text(data_tr[,2:3],labels=data_tr[,1],cex=1.5, col="darkred")
+    text(data_te2[,2:3],labels=data_te2[,1],cex=1.5)
+  } else {
+    plot(c(0,2.4),c(0.2,1.25),type="n",bty="n",xlab="x",ylab="y")
+    rug(data_tr[,"x"],col="darkred")
+    rug(data_te2[,"x"])
+    lines(xx,f(xx),col="gray",lty="dotted",lwd=2)
+ # }
+#if(!onlydata) {
 lines(xx,f_full(xx),col="black",lwd=2)
 for(i in 1:length(f_seg)) {
   lines(xx,f_seg[[i]](xx),col=col4[i],lty=lty4[i],lwd=2)
@@ -75,7 +88,7 @@ for(i in 1:length(f_seg)) {
   col="black",
   length=0.1) 
   }
-  legend("topleft",legend=c("SVM model for (1,15)",
+  legend("topright",legend=c("SVM model for (1,15)",
                           "segment model for (1,6)",
                           "segment model for (4,9)",
                           "segment model for (7,12)",
@@ -85,19 +98,19 @@ for(i in 1:length(f_seg)) {
        lty=c("solid",lty4,"dotted"),
        lwd=c(2,2,2,2,2,2),
        pch=c(NA,NA,NA,NA,NA,NA), #pch=c(NA,pch4,NA),
-       cex=0.7)
-}
+       cex=0.95)
+#}
   
 text(data_tr[,2:3],labels=data_tr[,1],cex=1, col="darkred")
 text(data_te2[,2:3],labels=data_te2[,1],cex=1)
-
+}
 dev.off()
 }
 ```
 
 ```{r}
-pdf("figures/1dplot.pdf",width=9,height=7)
-plot(c(1,18.5),c(-0.2,2.3),type="n",xaxt="n",xlab="i",ylab="",bty="n")
+pdf("figures/1dplot.pdf",width=12,height=7)
+plot(c(1,18.5),c(-0.35,2.3),type="n",xaxt="n",xlab="",ylab="y",bty="n")
 abline(v=15.5,col="black",lty="dashed")
 abline(v=18.5,col="black",lty="dashed")
 text(15.5,1.65,labels="training",pos=2)
@@ -106,6 +119,7 @@ points(data_tr[,c("i","y")],col="black",pch=15)
 points(data.frame(i=16:18,x=data_te2[,"y"]),col="black",pch=15)
 text(x=1:18,rep(-0.25,18),labels=c(data_tr[,"i"],as.character(data_te2[,"i"])),
      col=c(rep("darkred",15),rep("black",3)))
+text(8,-0.4,labels="data point",pos=4)
 legend("topleft",legend=c(
                           "y",
                           "estimate of y: SVM model for (1,15)",
@@ -113,22 +127,22 @@ legend("topleft",legend=c(
                           "estimate of y: segment model for (4,9)",
                           "estimate of y: segment model for (7,12)",
                           "estimate of y: segment model for (10,15)"),
-       col=c("black","black",col4),lty=c(NA,rep("solid",5)),pch=c(15,NA,pch4),lwd=c(1,2,1,1,1,1),
-       cex=0.9)
-text(x=(1+15)/2,y=-0.14,pos=3,col="black",cex=0.7,labels="SVM model for (1,15)")
+       col=c("black","black",col4),lty=c(NA,rep("solid",5)),pch=c(15,NA,pch4),lwd=c(2,2.25,2,2,2,2),
+       cex=1)
+text(x=(1+15)/2,y=-0.14,pos=3,col="black",cex=1,labels="SVM model for (1,15)")
 lines(c(1,15),c(-0.14,-0.14),col="black",lwd=2)
 for(i in 1:dim(seg)[1]) {
-  points(1:15,f_seg[[i]](data_tr[1:15,"x"]),col=col4[i],pch=pch4[i])
-  lines(1:15,f_seg[[i]](data_tr[1:15,"x"]),col=col4[i])
-  text(x=(seg[i,"a"]+seg[i,"b"])/2,y=(i-1)*0.14,pos=3,col=col4[i],cex=0.7,
+  points(1:15,f_seg[[i]](data_tr[1:15,"x"]),col=col4[i],pch=pch4[i],lwd=2)
+  lines(1:15,f_seg[[i]](data_tr[1:15,"x"]),col=col4[i],lwd=2)
+  text(x=(seg[i,"a"]+seg[i,"b"])/2,y=(i-1)*0.14,pos=3,col=col4[i],cex=1,
        labels=sprintf("segment model for (%d,%d)",seg[i,"a"],seg[i,"b"]))
-  lines(c(seg[i,"a"],seg[i,"b"]),rep((i-1)*0.14,2),col=col4[i])
-  points((seg[i,"a"]+seg[i,"b"])/2,(i-1)*0.14,col=col4[i],pch=pch4[i])
-  points(16:18,f_seg[[i]](data_te2[,"x"]),col=col4[i],pch=pch4[i])
-  lines(16:18,f_seg[[i]](data_te2[,"x"]),col=col4[i])
+  lines(c(seg[i,"a"],seg[i,"b"]),rep((i-1)*0.14,2),col=col4[i],lwd=2)
+  points((seg[i,"a"]+seg[i,"b"])/2,(i-1)*0.14,col=col4[i],pch=pch4[i],lwd=2)
+  points(16:18,f_seg[[i]](data_te2[,"x"]),col=col4[i],pch=pch4[i],lwd=2)
+  lines(16:18,f_seg[[i]](data_te2[,"x"]),col=col4[i],lwd=2)
 }
-lines(1:15,f_full(data_tr[,"x"]),col="black",lwd=2)
-lines(16:18,f_full(data_te2[,"x"]),col="black",lwd=2)
+lines(1:15,f_full(data_tr[,"x"]),col="black",lwd=2.25)
+lines(16:18,f_full(data_te2[,"x"]),col="black",lwd=2.25)
 dev.off()
 ```
 

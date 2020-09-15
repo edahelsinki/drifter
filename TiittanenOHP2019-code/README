@@ -1,4 +1,4 @@
-## -----------------------------------------------------------------------------
+## ---------------------------------------------------------------------------
 # This directory contains code and data related to paper
 #
 # "Estimating Regression Errors with Unknown Ground Truth"
@@ -16,7 +16,7 @@
 # Experiments are designed to be run using the Slurm Workload Manager.
 #
 #
-## -----------------------------------------------------------------------------
+## ---------------------------------------------------------------------------
 #
 #  Step 1) retrieve data: 
         cd data
@@ -32,8 +32,8 @@
 #  Step 3) process the results:
          bash process_results.sh
 
-## -----------------------------------------------------------------------------
+## ---------------------------------------------------------------------------
 # Now:
 #   - Table II contents will be in folder "experiments/results/tables" 
 #   - All figures will be in the folder "experiments/figures"
-## -----------------------------------------------------------------------------
+## ---------------------------------------------------------------------------
